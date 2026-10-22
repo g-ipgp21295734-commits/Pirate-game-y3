@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirate's Treasure: The Great English Quest</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pirate: {
+                            gold: '#FFD700',
+                            goldDark: '#B8860B',
+                            wood: '#8B4513',
+                            woodDark: '#5C2E0B',
+                            parchment: '#F5E6C8',
+                            parchmentDark: '#E6D2AA',
+                            ocean: '#1E3A8A',
+                            caribbean: '#0284C7',
+                            sand: '#FDE047',
+                            danger: '#DC2626',
+                            success: '#16A34A'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Comic Sans MS', 'Chalkboard SE', 'Fredoka', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Fredoka', 'Comic Sans MS', sans-serif;
+            background: #0284C7;
+            user-select: none;
+            overflow-x: hidden;
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='gold' stroke='black' stroke-width='1.5'><path d='M12 2L15 9H22L16 14L18 21L12 17L6 21L8 14L2 9H9L12 2Z'/></svg>"), auto;
+        }
+
+        /* Animated Ocean Background */
+        .ocean-bg {
+            background: linear-gradient(180deg, #0284C7 0%, #0369A1 50%, #075985 100%);
+            position: relative;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 60px;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100' preserveAspectRatio='none'><path d='M0,50 C150,100 350,-10 500,50 C650,110 900,10 1000,50 L1000,100 L0,100 Z' fill='%2338BDF8' opacity='0.4'/></svg>") repeat-x;
+            animation: waveAnim 12s linear infinite;
+        }
+
+        .wave2 {
+            bottom: 10px;
+            opacity: 0.6;
+            animation: waveAnim 8s linear infinite reverse;
+        }
+
+        @keyframes waveAnim {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Wood Panel & Scroll Textures */
+        .wood-panel {
+            background: #8B4513;
+            background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
+            border: 6px solid #5C2E0B;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.4);
+            border-radius: 18px;
+        }
+
+        .parchment {
+            background: #F5E6C8;
+            background-image: radial-gradient(#E6D2AA 15%, transparent 16%);
+            background-size: 20px 20px;
+            border: 4px solid #B8860B;
+            box-shadow: inset 0 0 30px rgba(139, 69, 19, 0.25), 0 8px 16px rgba(0,0,0,0.3);
+            border-radius: 14px;
+            color: #3B2005;
+        }
+
+        /* Buttons */
+        .btn-pirate {
+            background: linear-gradient(180deg, #FFD700 0%, #D97706 100%);
+            border: 3px solid #78350F;
+            color: #451A03;
+            font-weight: 700;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+            box-shadow: 0 5px 0 #78350F, 0 8px 10px rgba(0,0,0,0.3);
+            transition: all 0.1s ease;
+        }
+
+        .btn-pirate:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #78350F, 0 10px 15px rgba(0,0,0,0.3);
+            filter: brightness(1.05);
+        }
+
+        .btn-pirate:active:not(:disabled) {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #78350F, 0 3px 5px rgba(0,0,0,0.3);
+        }
+
+        .btn-pirate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            filter: grayscale(0.5);
+        }
+
+        .btn-blue {
+            background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+            border: 3px solid #0369A1;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 0 #0369A1, 0 8px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn-green {
+            background: linear-gradient(180deg, #4ADE80 0%, #16A34A 100%);
+            border: 3px solid #14532D;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 0 #14532D, 0 8px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Tile styles for rearrangement */
+        .word-tile {
+            background: #FFFBEB;
+            border: 2px solid #D97706;
+            box-shadow: 0 4px 0 #92400E;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .word-tile:hover {
+            transform: translateY(-2px);
+            background: #FEF3C7;
+        }
+
+        .word-tile:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #92400E;
+        }
+
+        /* Coin burst animation */
+        @keyframes coinBurst {
+            0% { transform: scale(0.3) translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.2) translateY(-80px); opacity: 0; }
+        }
+
+        .coin-popup {
+            animation: coinBurst 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Pulse highlight */
+        .pulse-correct {
+            animation: pulseGreen 1s infinite alternate;
+        }
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 5px #16A34A; }
+            100% { box-shadow: 0 0 20px #22C55E; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #5C2E0B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D97706;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body class="min-h-screen ocean-bg flex flex-col items-center justify-between text-slate-800 p-2 sm:p-4">
+
+    <!-- TOP HEADER / HUD BAR -->
+    <header class="w-full max-w-5xl bg-amber-950/80 backdrop-blur border-2 border-amber-600 rounded-2xl p-3 mb-3 text-white flex flex-wrap items-center justify-between gap-2 shadow-2xl z-20">
+        <div class="flex items-center gap-3">
+            <span class="text-3xl sm:text-4xl animate-bounce">🏴‍☠️</span>
+            <div>
+                <h1 class="text-lg sm:text-2xl font-black text-amber-400 tracking-wide leading-tight">PIRATE'S TREASURE</h1>
+                <p class="text-xs sm:text-sm text-amber-200 font-medium">Year 3 English Quest</p>
+            </div>
+        </div>
+
+        <!-- Audio Toggles & Stats -->
+        <div class="flex items-center gap-2 sm:gap-4 ml-auto sm:ml-0">
+            <!-- Audio Controls -->
+            <button id="btn-music" onclick="toggleMusic()" class="p-2 bg-amber-800 border border-amber-500 rounded-lg text-lg hover:bg-amber-700 transition" title="Toggle Music">
+                🎵 <span id="icon-music" class="text-xs font-bold">ON</span>
+            </button>
+            <button id="btn-sfx" onclick="toggleSFX()" class="p-2 bg-amber-800 border border-amber-500 rounded-lg text-lg hover:bg-amber-700 transition" title="Toggle Sound Effects">
+                🔊 <span id="icon-sfx" class="text-xs font-bold">ON</span>
+            </button>
+
+            <!-- Coins Badge -->
+            <div class="flex items-center gap-2 bg-amber-900/90 border-2 border-amber-400 px-3 py-1.5 rounded-xl shadow-inner">
+                <span class="text-2xl">🪙</span>
+                <span id="hud-score" class="text-xl sm:text-2xl font-black text-yellow-300">0</span>
+                <span class="text-xs text-amber-300">/720</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT VIEW CONTAINERS -->
+    <main class="w-full max-w-5xl flex-1 flex flex-col items-center justify-center relative z-10 my-2">
+
+        <!-- VIEW 1: MAP MENU (ISLAND SELECT) -->
+        <div id="view-map" class="w-full flex flex-col items-center">
+            <div class="wood-panel w-full p-4 sm:p-6 mb-4 text-center">
+                <h2 class="text-2xl sm:text-3xl font-black text-amber-300 tracking-wider mb-1">TREASURE MAP OF MALAYSIA SEAS</h2>
+                <p class="text-amber-100 text-sm sm:text-base">Choose an island to sail to! Complete all 6 islands to unlock the Grand Treasure Chest!</p>
+            </div>
+
+            <!-- Island Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                <!-- Island Cards dynamically generated -->
+            </div>
+        </div>
+
+        <!-- VIEW 2: GAMEPLAY (QUESTION SCREEN) -->
+        <div id="view-game" class="w-full hidden flex-col items-center">
+            
+            <!-- Island Navigation & Progress -->
+            <div class="w-full flex items-center justify-between mb-2 px-2">
+                <button onclick="showMapView()" class="btn-pirate px-4 py-2 rounded-xl text-sm flex items-center gap-1">
+                    🗺️ Map
+                </button>
+
+                <div class="flex-1 mx-4 bg-amber-950/60 p-2 rounded-xl border border-amber-700 text-center">
+                    <div class="flex justify-between text-xs text-amber-200 font-bold mb-1">
+                        <span id="hud-island-title">Island 1</span>
+                        <span id="hud-progress-text">Question 1/12</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-3 border border-amber-600/50 overflow-hidden">
+                        <div id="hud-progress-bar" class="bg-gradient-to-r from-amber-400 to-yellow-300 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <span class="text-xs text-amber-200 block">Island Progress</span>
+                    <span id="hud-island-score" class="text-lg font-black text-yellow-300">0/120</span>
+                </div>
+            </div>
+
+            <!-- Question Card (Parchment) -->
+            <div class="parchment w-full p-4 sm:p-6 mb-4 flex flex-col items-center relative">
+                
+                <!-- Floating Coin Pop-up Container -->
+                <div id="coin-popup-container" class="absolute top-2 right-6 pointer-events-none z-30"></div>
+
+                <!-- Topic Badge -->
+                <div id="question-badge" class="bg-amber-800 text-amber-100 text-xs font-bold px-3 py-1 rounded-full border border-amber-600 mb-3 uppercase tracking-wider">
+                    Topic
+                </div>
+
+                <!-- Dynamic Visual Area (Clock, Preposition Illustration, etc.) -->
+                <div id="question-visual" class="w-full flex justify-center items-center my-2 min-h-[120px]">
+                    <!-- Injected visual elements like SVG clock, prepositions image -->
+                </div>
+
+                <!-- Question Text -->
+                <h3 id="question-text" class="text-lg sm:text-2xl font-bold text-amber-950 text-center my-3 leading-snug">
+                    Question text goes here?
+                </h3>
+
+                <!-- ANSWER INTERACTION AREA -->
+                <div id="answer-interactive-area" class="w-full max-w-2xl mt-2">
+                    <!-- Multiple Choice, Text Input, or Word Rearrange injected here -->
+                </div>
+
+                <!-- INSTANT FEEDBACK BOX -->
+                <div id="feedback-box" class="w-full max-w-2xl mt-4 p-4 rounded-xl border-2 hidden flex-col items-center text-center transition-all duration-200">
+                    <div class="flex items-center gap-2 text-xl font-bold mb-1" id="feedback-header">
+                        <span id="feedback-icon" class="text-2xl">✅</span>
+                        <span id="feedback-title">ARRR! Correct!</span>
+                    </div>
+                    <p id="feedback-msg" class="text-sm sm:text-base font-semibold text-slate-800">Explanation text</p>
+                    
+                    <button id="btn-next" onclick="nextQuestion()" class="btn-green mt-3 px-8 py-2.5 text-base rounded-xl font-bold tracking-wide animate-pulse">
+                        Next Question ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: ISLAND COMPLETED SUMMARY -->
+        <div id="view-summary" class="w-full hidden flex-col items-center text-center">
+            <div class="wood-panel w-full max-w-xl p-6 sm:p-8 flex flex-col items-center text-white">
+                <span class="text-6xl mb-2 animate-bounce">🏝️</span>
+                <h2 class="text-3xl font-black text-amber-300 mb-1">ISLAND CONQUERED!</h2>
+                <p id="summary-island-name" class="text-lg text-amber-200 font-bold mb-4">Captain Clock's Island</p>
+
+                <div class="parchment w-full p-4 mb-6 text-slate-900 rounded-xl">
+                    <div class="text-4xl font-black text-amber-700 mb-1" id="summary-score-text">120 / 120</div>
+                    <p class="text-sm text-amber-900 font-medium">Gold Coins Earned on this Island!</p>
+                </div>
+
+                <div class="flex gap-4 w-full">
+                    <button onclick="showMapView()" class="btn-pirate flex-1 py-3 rounded-xl font-bold text-base">
+                        🗺️ Return to Map
+                    </button>
+                    <button id="btn-next-island" onclick="continueToNextIsland()" class="btn-green flex-1 py-3 rounded-xl font-bold text-base">
+                        Next Island ➔
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: GRAND TREASURE / FINAL RESULTS & REVIEW -->
+        <div id="view-final" class="w-full hidden flex-col items-center">
+            <div class="wood-panel w-full p-6 text-white text-center mb-6">
+                <span class="text-7xl mb-3 inline-block animate-pulse">👑🏴‍☠️🏆</span>
+                <h2 class="text-3xl sm:text-5xl font-black text-yellow-300 mb-2">THE GREAT ENGLISH QUEST COMPLETE!</h2>
+                <p class="text-amber-100 text-base sm:text-lg mb-4">You solved all the mysteries and claimed the Ultimate Pirate Treasure!</p>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-slate-900 my-4">
+                    <div class="bg-amber-100 p-3 rounded-xl border-2 border-amber-500">
+                        <span class="text-xs text-amber-800 uppercase font-bold block">Total Coins</span>
+                        <span id="final-coins" class="text-2xl font-black text-amber-700">720</span>
+                    </div>
+                    <div class="bg-amber-100 p-3 rounded-xl border-2 border-amber-500">
+                        <span class="text-xs text-amber-800 uppercase font-bold block">Percentage</span>
+                        <span id="final-percent" class="text-2xl font-black text-amber-700">100%</span>
+                    </div>
+                    <div class="bg-amber-100 p-3 rounded-xl border-2 border-amber-500">
+                        <span class="text-xs text-amber-800 uppercase font-bold block">Correct</span>
+                        <span id="final-correct" class="text-2xl font-black text-green-700">72/72</span>
+                    </div>
+                    <div class="bg-amber-100 p-3 rounded-xl border-2 border-amber-500">
+                        <span class="text-xs text-amber-800 uppercase font-bold block">Rank</span>
+                        <span id="final-rank" class="text-xl font-black text-amber-900">Pirate King!</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4 mt-6">
+                    <button onclick="toggleReviewSection()" class="btn-blue px-6 py-3 rounded-xl font-bold text-base">
+                        📝 Review All Answers
+                    </button>
+                    <button onclick="restartGame()" class="btn-pirate px-6 py-3 rounded-xl font-bold text-base">
+                        🔄 Play Again
+                    </button>
+                </div>
+            </div>
+
+            <!-- REVIEW LIST CONTAINER -->
+            <div id="review-container" class="w-full hidden bg-amber-950/90 border-2 border-amber-500 p-4 rounded-2xl max-h-[500px] overflow-y-auto text-white">
+                <h3 class="text-xl font-bold text-amber-300 mb-4 text-center">Full Quest Answer Log</h3>
+                <div id="review-list" class="space-y-3">
+                    <!-- Injected review items -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER WAVES & CREDITS -->
+    <footer class="w-full text-center text-xs text-amber-200/80 py-2 relative z-10">
+        Malaysian Primary School Year 3 English Revision Game &bull; Pirate's Treasure &copy; 2026
+    </footer>
+
+    <!-- Background Ocean Waves -->
+    <div class="wave"></div>
+    <div class="wave wave2"></div>
+
+    <!-- AUDIO & GAME SCRIPT -->
+    <script>
+        /* -------------------------------------------------------------------------- */
+        /* 1. AUDIO SYNTHESIZER (WEB AUDIO API)                                      */
+        /* -------------------------------------------------------------------------- */
+        let audioCtx = null;
+        let musicMuted = false;
+        let sfxMuted = false;
+        let bgmInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (sfxMuted) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.08);
+            } 
+            else if (type === 'correct') {
+                // Gold coin jingle (Arpeggio notes C5, E5, G5, C6)
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(f, now + idx * 0.07);
+                    gain.gain.setValueAtTime(0.25, now + idx * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.07);
+                    osc.stop(now + idx * 0.07 + 0.25);
+                });
+            } 
+            else if (type === 'wrong') {
+                // Low wooden knock descending notes
+                const freqs = [220, 180];
+                freqs.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(f, now + idx * 0.12);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.12);
+                    osc.stop(now + idx * 0.12 + 0.15);
+                });
+            }
+            else if (type === 'fanfare') {
+                const notes = [440, 554.37, 659.25, 880];
+                notes.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now + idx * 0.1);
+                    gain.gain.setValueAtTime(0.3, now + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.1);
+                    osc.stop(now + idx * 0.1 + 0.4);
+                });
+            }
+        }
+
+        function toggleMusic() {
+            musicMuted = !musicMuted;
+            document.getElementById('icon-music').innerText = musicMuted ? 'OFF' : 'ON';
+            if (musicMuted) {
+                stopBGM();
+            } else {
+                startBGM();
+            }
+        }
+
+        function toggleSFX() {
+            sfxMuted = !sfxMuted;
+            document.getElementById('icon-sfx').innerText = sfxMuted ? 'OFF' : 'ON';
+        }
+
+        function startBGM() {
+            if (musicMuted || bgmInterval) return;
+            initAudio();
+            
+            // Gentle ambient pirate tune loop using Web Audio
+            let noteIdx = 0;
+            const melody = [261.63, 293.66, 329.63, 349.23, 392.00, 329.63, 261.63, 196.00];
+            
+            bgmInterval = setInterval(() => {
+                if (musicMuted || !audioCtx) return;
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(melody[noteIdx], now);
+                gain.gain.setValueAtTime(0.04, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.5);
+
+                noteIdx = (noteIdx + 1) % melody.length;
+            }, 600);
+        }
+
+        function stopBGM() {
+            if (bgmInterval) {
+                clearInterval(bgmInterval);
+                bgmInterval = null;
+            }
+        }
+
+        // Global User Interaction Listener for Autoplay Compliance
+        window.addEventListener('click', () => {
+            initAudio();
+            if (!musicMuted && !bgmInterval) {
+                startBGM();
+            }
+        }, { once: true });
+
+        /* -------------------------------------------------------------------------- */
+        /* 2. COMPREHENSIVE QUESTION DATASET (72 UNIQUE YEAR 3 QUESTIONS)           */
+        /* -------------------------------------------------------------------------- */
+        const ISLANDS = [
+            {
+                id: 1,
+                name: "Captain Clock's Island",
+                topic: "Telling the Time",
+                icon: "⏰",
+                desc: "Analogue clocks, digital time, quarter past/to, and prepositions of time.",
+                unlocked: true,
+                questions: [
+                    { type: "clock", hour: 8, minute: 0, text: "Look at the clock. What time is it?", options: ["It is eight o'clock.", "It is half past eight.", "It is quarter past eight.", "It is seven o'clock."], correct: "It is eight o'clock.", explain: "The long minute hand points to 12 and the short hour hand points to 8." },
+                    { type: "clock", hour: 3, minute: 30, text: "Choose the correct time shown on the clock.", options: ["It is half past three.", "It is three o'clock.", "It is quarter to three.", "It is half past four."], correct: "It is half past three.", explain: "When the minute hand points to 6, it means half past the hour." },
+                    { type: "mcq", text: "Which digital time matches 'quarter past seven'?", options: ["07:15", "07:45", "07:30", "06:45"], correct: "07:15", explain: "'Quarter past' means 15 minutes past the hour." },
+                    { type: "mcq", text: "Which digital time means 'quarter to ten'?", options: ["09:45", "10:15", "10:45", "09:15"], correct: "09:45", explain: "'Quarter to ten' means 15 minutes before 10, which is 9:45." },
+                    { type: "rearrange", words: ["at", "starts", "seven o'clock", "The lesson"], correct: "The lesson starts at seven o'clock", explain: "Correct order: Subject + Verb + Preposition + Time." },
+                    { type: "mcq", text: "Fill in the blank: My English class starts ___ eight o'clock.", options: ["at", "on", "in", "under"], correct: "at", explain: "We use the preposition 'at' for specific clock times." },
+                    { type: "clock", hour: 10, minute: 15, text: "What time is displayed on the clock?", options: ["It is quarter past ten.", "It is ten o'clock.", "It is quarter to ten.", "It is half past ten."], correct: "It is quarter past ten.", explain: "The minute hand at 3 represents 15 minutes (quarter past)." },
+                    { type: "rearrange", words: ["go to bed", "I", "half past nine", "at"], correct: "I go to bed at half past nine", explain: "Subject (I) + verb phrase + at + time." },
+                    { type: "mcq", text: "It is 04:30. Choose the correct written form.", options: ["half past four", "four o'clock", "quarter to four", "half past five"], correct: "half past four", explain: "4:30 is written as 'half past four'." },
+                    { type: "rearrange", words: ["wakes up", "at", "six o'clock", "Captain Dan"], correct: "Captain Dan wakes up at six o'clock", explain: "Proper sentence structure with clock time." },
+                    { type: "mcq", text: "The minute hand is at 9, and the hour hand is almost at 2. What time is it?", options: ["Quarter to two", "Quarter past two", "Half past one", "Two o'clock"], correct: "Quarter to two", explain: "Minute hand at 9 means 15 minutes until the next hour (quarter to)." },
+                    { type: "text", text: "Write the time in words for 05:00. (Format: ___ o'clock)", correct: "five o'clock", explain: "05:00 is written as 'five o'clock'." }
+                ]
+            },
+            {
+                id: 2,
+                name: "The Mapmaker's Island",
+                topic: "Prepositions of Place",
+                icon: "🗺️",
+                desc: "Master prepositions: in, on, under, behind, in front of, next to, between, near.",
+                unlocked: false,
+                questions: [
+                    { type: "scene", sceneObj: { item: "🦜", relation: "on", target: "🛢️" }, text: "Look at the picture. Where is the parrot?", options: ["The parrot is on the barrel.", "The parrot is under the barrel.", "The parrot is in the barrel.", "The parrot is behind the barrel."], correct: "The parrot is on the barrel.", explain: "The parrot is resting on top of the barrel." },
+                    { type: "scene", sceneObj: { item: "🏴‍☠️", relation: "behind", target: "🌴" }, text: "Where is the young pirate standing?", options: ["behind the palm tree", "in front of the palm tree", "under the palm tree", "on the palm tree"], correct: "behind the palm tree", explain: "The pirate is hidden behind the palm tree." },
+                    { type: "rearrange", words: ["is", "The parrot", "next to", "the chest"], correct: "The parrot is next to the chest", explain: "Subject + verb + prepositional phrase." },
+                    { type: "scene", sceneObj: { item: "💎", relation: "in", target: "📦" }, text: "Where is the shiny diamond?", options: ["in the box", "under the box", "behind the box", "opposite the box"], correct: "in the box", explain: "The diamond is inside the box." },
+                    { type: "mcq", text: "The treasure chest is sitting ___ two tall palm trees.", options: ["between", "under", "in", "on"], correct: "between", explain: "Use 'between' when something is in the middle of two items." },
+                    { type: "rearrange", words: ["is", "The crab", "under", "the table"], correct: "The crab is under the table", explain: "Word order: Subject + verb + preposition + noun." },
+                    { type: "scene", sceneObj: { item: "🗺️", relation: "in front of", target: "🪵" }, text: "Where is the treasure map?", options: ["in front of the log", "behind the log", "under the log", "in the log"], correct: "in front of the log", explain: "The map is positioned directly in front of the log." },
+                    { type: "mcq", text: "The pirate ship is anchored ___ the island shore.", options: ["near", "under", "in", "between"], correct: "near", explain: "Ships anchor 'near' the island shore." },
+                    { type: "rearrange", words: ["standing", "He is", "in front of", "the ship"], correct: "He is standing in front of the ship", explain: "Subject + progressive verb + prepositional phrase." },
+                    { type: "mcq", text: "Choose the correct sentence:", options: ["The hat is on the pirate's head.", "The hat is under the pirate's head.", "The hat is between the pirate's head.", "The hat is opposite the head."], correct: "The hat is on the pirate's head.", explain: "We wear hats 'on' our heads." },
+                    { type: "mcq", text: "The ship captain stands ___ the helm to steer.", options: ["behind", "under", "in", "between"], correct: "behind", explain: "You stand behind the wheel/helm." },
+                    { type: "text", text: "Fill in the preposition: The gold coin fell ___ the water. (in / on)", correct: "in", explain: "Things fall 'in' or 'into' water." }
+                ]
+            },
+            {
+                id: 3,
+                name: "The Parrot's Island",
+                topic: "Singular and Plural Nouns",
+                icon: "🦜",
+                desc: "Regular plurals (-s, -es, -ies) and irregular plurals (children, teeth, mice).",
+                unlocked: false,
+                questions: [
+                    { type: "mcq", text: "There are three ___ on the pirate ship.", options: ["boxes", "boxs", "box", "boxies"], correct: "boxes", explain: "Nouns ending in -x take -es in plural form." },
+                    { type: "mcq", text: "One child is playing. Three ___ are singing.", options: ["children", "childs", "childrens", "childes"], correct: "children", explain: "'Child' is irregular; its plural form is 'children'." },
+                    { type: "mcq", text: "Which spelling is correct for more than one baby?", options: ["babies", "babys", "babyes", "babys'"], correct: "babies", explain: "Nouns ending in consonant + y change y to -ies." },
+                    { type: "rearrange", words: ["five", "There are", "parrots", "on the ship"], correct: "There are five parrots on the ship", explain: "Correct sentence structure for plural counts." },
+                    { type: "mcq", text: "The pirate brushed his white ___ after dinner.", options: ["teeth", "tooths", "toothes", "teethes"], correct: "teeth", explain: "Plural of 'tooth' is 'teeth'." },
+                    { type: "mcq", text: "Look! Two ___ are running across the deck!", options: ["mice", "mouses", "mousies", "mices"], correct: "mice", explain: "Plural of 'mouse' is 'mice'." },
+                    { type: "rearrange", words: ["has", "The captain", "two sharp", "swords"], correct: "The captain has two sharp swords", explain: "Subject + verb + plural object." },
+                    { type: "mcq", text: "The island has many beautiful ___.", options: ["beaches", "beachs", "beacheses", "beach"], correct: "beaches", explain: "Nouns ending in -ch take -es in plural." },
+                    { type: "mcq", text: "Which sentence uses plural nouns correctly?", options: ["The men are carrying two heavy bags.", "The mans are carrying two heavy bags.", "The men is carrying two heavy bags.", "The man are carrying two heavy bags."], correct: "The men are carrying two heavy bags.", explain: "'Men' is plural and takes the verb 'are'." },
+                    { type: "rearrange", words: ["bought", "She", "three fresh", "mangoes"], correct: "She bought three fresh mangoes", explain: "Mango takes -es in plural form." },
+                    { type: "text", text: "Write the plural form of the word 'monkey'.", correct: "monkeys", explain: "Vowel + y (key) just adds -s -> monkeys." },
+                    { type: "mcq", text: "There are six ___ in the island garden.", options: ["butterflies", "butterflys", "flys", "butterflyes"], correct: "butterflies", explain: "Butterfly ends in consonant + y -> butterflies." }
+                ]
+            },
+            {
+                id: 4,
+                name: "Yesterday's Island",
+                topic: "Where Were You Yesterday?",
+                icon: "⏳",
+                desc: "Practice was / were past tense with places (zoo, library, beach, museum).",
+                unlocked: false,
+                questions: [
+                    { type: "mcq", text: "I ___ at the library yesterday afternoon.", options: ["was", "were", "are", "is"], correct: "was", explain: "Use 'was' with the pronoun 'I'." },
+                    { type: "mcq", text: "They ___ at the sunny beach yesterday.", options: ["were", "was", "is", "am"], correct: "were", explain: "Use 'were' with plural pronouns like 'They'." },
+                    { type: "rearrange", words: ["was", "She", "at the zoo", "yesterday"], correct: "She was at the zoo yesterday", explain: "Subject (She) + was + location + time word." },
+                    { type: "mcq", text: "Where was Amir yesterday? He ___ at the museum.", options: ["was", "were", "are", "been"], correct: "was", explain: "'He' takes 'was' for singular past tense." },
+                    { type: "rearrange", words: ["were", "They", "at the playground", "yesterday"], correct: "They were at the playground yesterday", explain: "Plural subject (They) + were + place + time." },
+                    { type: "mcq", text: "Where ___ you yesterday morning?", options: ["were", "was", "is", "are"], correct: "were", explain: "The pronoun 'you' always takes 'were' in past tense." },
+                    { type: "mcq", text: "We ___ not at school yesterday because it was Sunday.", options: ["were", "was", "are", "is"], correct: "were", explain: "'We' takes 'were'." },
+                    { type: "rearrange", words: ["at the market", "My mother", "was", "yesterday"], correct: "My mother was at the market yesterday", explain: "Subject (My mother) + was + location." },
+                    { type: "mcq", text: "Choose the grammatically correct sentence:", options: ["The children were at the park yesterday.", "The children was at the park yesterday.", "The children is at the park yesterday.", "The children am at the park yesterday."], correct: "The children were at the park yesterday.", explain: "'Children' is plural, so it requires 'were'." },
+                    { type: "text", text: "Complete sentence: He ___ (was / were) at the hospital yesterday.", correct: "was", explain: "'He' is singular, so we use 'was'." },
+                    { type: "rearrange", words: ["at the cinema", "We", "were", "yesterday"], correct: "We were at the cinema yesterday", explain: "Proper order: We + were + at the cinema + yesterday." },
+                    { type: "mcq", text: "Siti and Mei Ling ___ at the swimming pool yesterday.", options: ["were", "was", "is", "are"], correct: "were", explain: "Two people (Siti and Mei Ling) make a plural subject -> were." }
+                ]
+            },
+            {
+                id: 5,
+                name: "The Treasure Chest Island",
+                topic: "Some and Any",
+                icon: "🏴‍☠️",
+                desc: "Learn when to use 'some' (positive) and 'any' (negative & questions).",
+                unlocked: false,
+                questions: [
+                    { type: "mcq", text: "There are ___ delicious apples in the basket.", options: ["some", "any", "a", "an"], correct: "some", explain: "Use 'some' in positive statements." },
+                    { type: "mcq", text: "Is there ___ milk left in the jug?", options: ["any", "some", "many", "few"], correct: "any", explain: "Use 'any' in questions." },
+                    { type: "mcq", text: "We haven't got ___ biscuits in the pantry.", options: ["any", "some", "a", "an"], correct: "any", explain: "Use 'any' in negative sentences (haven't got)." },
+                    { type: "rearrange", words: ["any", "Are there", "biscuits", "in the box?"], correct: "Are there any biscuits in the box?", explain: "Question structure: Are there + any + noun + place?" },
+                    { type: "rearrange", words: ["some", "There is", "rice", "in the bowl"], correct: "There is some rice in the bowl", explain: "Positive statement with uncountable noun." },
+                    { type: "mcq", text: "Would you like ___ fruit juice, matey?", options: ["some", "any", "no", "every"], correct: "some", explain: "Use 'some' when making polite offers or requests." },
+                    { type: "mcq", text: "The pirate found ___ gold coins inside the cave.", options: ["some", "any", "none", "every"], correct: "some", explain: "Positive statement -> 'some'." },
+                    { type: "rearrange", words: ["haven't got", "We", "any", "fresh water"], correct: "We haven't got any fresh water", explain: "Negative sentence with 'any'." },
+                    { type: "mcq", text: "Are there ___ monkeys on this island?", options: ["any", "some", "little", "much"], correct: "any", explain: "Questions take 'any'." },
+                    { type: "mcq", text: "There isn't ___ bread left for breakfast.", options: ["any", "some", "many", "few"], correct: "any", explain: "Negative 'isn't' requires 'any'." },
+                    { type: "text", text: "Fill in the blank: She has ___ (some / any) sweet bananas.", correct: "some", explain: "Positive sentence takes 'some'." },
+                    { type: "mcq", text: "Do you have ___ spare pirate hats?", options: ["any", "some", "much", "little"], correct: "any", explain: "Questions take 'any'." }
+                ]
+            },
+            {
+                id: 6,
+                name: "The Calendar Cove",
+                topic: "Months of the Year & Spelling",
+                icon: "📅",
+                desc: "Master chronological order, before/after, missing letters, and correct spelling.",
+                unlocked: false,
+                questions: [
+                    { type: "mcq", text: "Which spelling of the 2nd month is correct?", options: ["February", "Febuary", "Februery", "Febrary"], correct: "February", explain: "February has an 'r' after the 'b'." },
+                    { type: "mcq", text: "Which month comes directly AFTER September?", options: ["October", "August", "November", "July"], correct: "October", explain: "The sequence is August -> September -> October." },
+                    { type: "mcq", text: "Which month comes directly BEFORE March?", options: ["February", "April", "January", "May"], correct: "February", explain: "February comes right before March." },
+                    { type: "text", text: "Fill in the missing letter: N _ v e m b e r (type full word correctly)", correct: "November", explain: "November is spelled N-o-v-e-m-b-e-r." },
+                    { type: "rearrange", words: ["is", "My birthday", "in October", "celebrated"], correct: "My birthday is celebrated in October", explain: "Subject + verb + prepositional phrase." },
+                    { type: "mcq", text: "Which month is the 8th month of the year?", options: ["August", "July", "September", "October"], correct: "August", explain: "August is the 8th month." },
+                    { type: "mcq", text: "Choose the correctly spelled month:", options: ["August", "Agust", "Augest", "Augost"], correct: "August", explain: "August is spelled A-U-G-U-S-T." },
+                    { type: "rearrange", words: ["comes after", "June", "May", "every year"], correct: "June comes after May every year", explain: "Logical chronological sentence." },
+                    { type: "mcq", text: "Which month is the FIRST month of the year?", options: ["January", "December", "February", "March"], correct: "January", explain: "The year begins with January." },
+                    { type: "mcq", text: "Which month is the LAST month of the year?", options: ["December", "November", "October", "January"], correct: "December", explain: "December is month 12." },
+                    { type: "mcq", text: "Spot the INCORRECT spelling:", options: ["Jully", "July", "June", "January"], correct: "Jully", explain: "'July' only has one 'l'." },
+                    { type: "text", text: "Spell the 4th month of the year correctly.", correct: "April", explain: "The 4th month is April." }
+                ]
+            }
+        ];
+
+        /* -------------------------------------------------------------------------- */
+        /* 3. GAME STATE MANAGEMENT                                                   */
+        /* -------------------------------------------------------------------------- */
+        let state = {
+            totalCoins: 0,
+            currentIslandIdx: 0,
+            currentQuestionIdx: 0,
+            islandScores: [0, 0, 0, 0, 0, 0],
+            islandUnlocked: [true, false, false, false, false, false],
+            rearrangeSelected: [],
+            userAnswers: [], // Stores full question review log
+            hasAnsweredCurrent: false
+        };
+
+        // Load progress from localStorage if available
+        function loadGameState() {
+            try {
+                const saved = localStorage.getItem('pirate_quest_save_v1');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state.totalCoins = parsed.totalCoins || 0;
+                    state.islandScores = parsed.islandScores || [0,0,0,0,0,0];
+                    state.islandUnlocked = parsed.islandUnlocked || [true,false,false,false,false,false];
+                }
+            } catch(e) {
+                console.log("LocalStorage not accessible, using default state.");
+            }
+        }
+
+        function saveGameState() {
+            try {
+                localStorage.setItem('pirate_quest_save_v1', JSON.stringify({
+                    totalCoins: state.totalCoins,
+                    islandScores: state.islandScores,
+                    islandUnlocked: state.islandUnlocked
+                }));
+            } catch(e) {}
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 4. RENDER MAP & VIEWS                                                     */
+        /* -------------------------------------------------------------------------- */
+        function updateHUD() {
+            document.getElementById('hud-score').innerText = state.totalCoins;
+        }
+
+        function showMapView() {
+            stopBGM();
+            if (!musicMuted) startBGM();
+
+            document.getElementById('view-map').classList.remove('hidden');
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-summary').classList.add('hidden');
+            document.getElementById('view-final').classList.add('hidden');
+
+            const container = document.querySelector('#view-map .grid');
+            container.innerHTML = '';
+
+            ISLANDS.forEach((island, idx) => {
+                const isUnlocked = state.islandUnlocked[idx];
+                const score = state.islandScores[idx];
+
+                const card = document.createElement('div');
+                card.className = `wood-panel p-4 flex flex-col justify-between items-center text-center transition transform ${isUnlocked ? 'hover:scale-105 cursor-pointer' : 'opacity-70 grayscale'}`;
+                
+                card.innerHTML = `
+                    <div class="text-5xl mb-2">${isUnlocked ? island.icon : '🔒'}</div>
+                    <h3 class="text-xl font-bold text-amber-300 mb-1">${island.name}</h3>
+                    <p class="text-xs text-amber-100 font-medium mb-3">${island.topic}</p>
+                    <p class="text-xs text-amber-200/80 mb-4 px-2">${island.desc}</p>
+                    
+                    <div class="w-full mt-auto">
+                        ${isUnlocked ? `
+                            <div class="flex justify-between text-xs text-amber-300 font-bold mb-1">
+                                <span>Score: ${score}/120</span>
+                                <span>${Math.round((score/120)*100)}%</span>
+                            </div>
+                            <button onclick="startIsland(${idx})" class="btn-pirate w-full py-2 rounded-xl text-sm font-bold">
+                                ${score > 0 ? 'Revisit Island' : 'Sail Here ⛵'}
+                            </button>
+                        ` : `
+                            <span class="inline-block bg-amber-950/80 border border-amber-700 text-amber-400 text-xs px-3 py-1.5 rounded-xl font-bold">
+                                Locked 🔒
+                            </span>
+                        `}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+
+            updateHUD();
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 5. GAMEPLAY LOGIC & QUESTION RENDERING                                    */
+        /* -------------------------------------------------------------------------- */
+        function startIsland(islandIdx) {
+            playSound('click');
+            state.currentIslandIdx = islandIdx;
+            state.currentQuestionIdx = 0;
+            showQuestionView();
+        }
+
+        function showQuestionView() {
+            document.getElementById('view-map').classList.add('hidden');
+            document.getElementById('view-game').classList.remove('hidden');
+            document.getElementById('view-game').classList.add('flex');
+            document.getElementById('view-summary').classList.add('hidden');
+
+            state.hasAnsweredCurrent = false;
+
+            const island = ISLANDS[state.currentIslandIdx];
+            const q = island.questions[state.currentQuestionIdx];
+
+            // Update Header Info
+            document.getElementById('hud-island-title').innerText = island.name;
+            document.getElementById('hud-progress-text').innerText = `Question ${state.currentQuestionIdx + 1}/12`;
+            document.getElementById('hud-progress-bar').style.width = `${((state.currentQuestionIdx + 1) / 12) * 100}%`;
+            document.getElementById('hud-island-score').innerText = `${state.islandScores[state.currentIslandIdx]}/120`;
+
+            document.getElementById('question-badge').innerText = island.topic;
+            document.getElementById('question-text').innerText = q.text;
+
+            // Reset feedback box
+            const fbBox = document.getElementById('feedback-box');
+            fbBox.classList.add('hidden');
+            fbBox.className = "w-full max-w-2xl mt-4 p-4 rounded-xl border-2 hidden flex-col items-center text-center transition-all duration-200";
+
+            // Render Visual Component
+            renderVisual(q);
+
+            // Render Answers Interface
+            renderInteractiveArea(q);
+
+            updateHUD();
+        }
+
+        function renderVisual(q) {
+            const visualArea = document.getElementById('question-visual');
+            visualArea.innerHTML = '';
+
+            if (q.type === 'clock') {
+                // Dynamic SVG Analogue Clock
+                visualArea.innerHTML = createClockSVG(q.hour, q.minute);
+            } 
+            else if (q.type === 'scene') {
+                // Dynamic SVG Preposition Scene Illustration
+                visualArea.innerHTML = createPrepositionSceneSVG(q.sceneObj);
+            } 
+            else {
+                // Generic Decorative Treasure Graphics
+                visualArea.innerHTML = `
+                    <div class="text-5xl animate-pulse my-2">🏴‍☠️ 📜 💎</div>
+                `;
+            }
+        }
+
+        // SVG Clock Generator
+        function createClockSVG(hour, minute) {
+            const minuteAngle = minute * 6; // 360 deg / 60 min
+            const hourAngle = (hour % 12) * 30 + (minute * 0.5); // 360 deg / 12 hr + minute offset
+
+            return `
+                <svg width="140" height="140" viewBox="0 0 100 100" class="drop-shadow-md">
+                    <!-- Outer Rim -->
+                    <circle cx="50" cy="50" r="46" fill="#FFFBEB" stroke="#8B4513" stroke-width="6"/>
+                    <circle cx="50" cy="50" r="41" fill="none" stroke="#D97706" stroke-width="2"/>
+                    
+                    <!-- Hour Numbers -->
+                    <text x="50" y="18" text-anchor="middle" font-size="8" font-weight="bold" fill="#451A03">12</text>
+                    <text x="83" y="53" text-anchor="middle" font-size="8" font-weight="bold" fill="#451A03">3</text>
+                    <text x="50" y="88" text-anchor="middle" font-size="8" font-weight="bold" fill="#451A03">6</text>
+                    <text x="17" y="53" text-anchor="middle" font-size="8" font-weight="bold" fill="#451A03">9</text>
+
+                    <!-- Hour Hand -->
+                    <line x1="50" y1="50" x2="50" y2="28" stroke="#78350F" stroke-width="4" stroke-linecap="round" transform="rotate(${hourAngle} 50 50)"/>
+                    
+                    <!-- Minute Hand -->
+                    <line x1="50" y1="50" x2="50" y2="18" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" transform="rotate(${minuteAngle} 50 50)"/>
+                    
+                    <!-- Center Pin -->
+                    <circle cx="50" cy="50" r="3.5" fill="#451A03"/>
+                </svg>
+            `;
+        }
+
+        // SVG Preposition Scene Generator
+        function createPrepositionSceneSVG(sceneObj) {
+            const { item, relation, target } = sceneObj;
+            return `
+                <div class="relative bg-amber-200/60 border-2 border-amber-600 rounded-2xl p-4 w-64 h-32 flex items-center justify-center overflow-hidden shadow-inner">
+                    <div class="absolute bottom-2 left-0 right-0 h-4 bg-amber-400/50"></div>
+                    <div class="flex items-center justify-center gap-4 relative z-10 text-4xl">
+                        ${relation === 'behind' ? `<span class="opacity-40">${item}</span><span class="z-10">${target}</span>` : ''}
+                        ${relation === 'on' ? `<div class="flex flex-col items-center"><span>${item}</span><span>${target}</span></div>` : ''}
+                        ${relation === 'in' ? `<div class="relative"><span class="text-3xl">${target}</span><span class="absolute inset-0 flex items-center justify-center text-xl">${item}</span></div>` : ''}
+                        ${relation === 'in front of' ? `<span class="z-10">${item}</span><span class="opacity-50">${target}</span>` : ''}
+                        ${relation === 'next to' ? `<span>${item}</span><span>${target}</span>` : ''}
+                        ${relation === 'under' ? `<div class="flex flex-col items-center"><span>${target}</span><span>${item}</span></div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInteractiveArea(q) {
+            const area = document.getElementById('answer-interactive-area');
+            area.innerHTML = '';
+
+            if (q.type === 'mcq' || q.type === 'clock' || q.type === 'scene') {
+                const grid = document.createElement('div');
+                grid.className = "grid grid-cols-1 sm:grid-cols-2 gap-3 w-full";
+
+                q.options.forEach((opt) => {
+                    const btn = document.createElement('button');
+                    btn.className = "btn-pirate p-3 rounded-xl text-sm sm:text-base text-left font-bold transition flex items-center justify-between";
+                    btn.innerHTML = `<span>${opt}</span> <span class="opt-mark text-lg"></span>`;
+                    btn.onclick = () => submitMCQAnswer(opt, btn, q);
+                    grid.appendChild(btn);
+                });
+
+                area.appendChild(grid);
+            } 
+            else if (q.type === 'text') {
+                const wrap = document.createElement('div');
+                wrap.className = "flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto";
+                wrap.innerHTML = `
+                    <input type="text" id="input-text-answer" placeholder="Type your answer here..." class="flex-1 p-3 rounded-xl border-2 border-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 text-center font-bold text-lg">
+                    <button id="btn-submit-text" onclick="submitTextAnswer()" class="btn-green px-6 py-3 rounded-xl font-bold">Check Answer</button>
+                `;
+                area.appendChild(wrap);
+                // Bind enter key
+                setTimeout(() => {
+                    const inp = document.getElementById('input-text-answer');
+                    if (inp) {
+                        inp.onkeyup = (e) => { if (e.key === 'Enter') submitTextAnswer(); };
+                    }
+                }, 50);
+            } 
+            else if (q.type === 'rearrange') {
+                state.rearrangeSelected = [];
+
+                // Shuffle words for bank
+                const shuffledWords = [...q.words].sort(() => Math.random() - 0.5);
+
+                const wrap = document.createElement('div');
+                wrap.className = "flex flex-col gap-4 w-full";
+
+                wrap.innerHTML = `
+                    <!-- Selected Answer Area -->
+                    <div class="w-full min-h-[60px] p-3 bg-amber-950/20 border-2 border-dashed border-amber-700 rounded-xl flex flex-wrap gap-2 items-center justify-center" id="rearrange-answer-zone">
+                        <span class="text-xs text-amber-800 italic font-medium" id="rearrange-placeholder">Click word tiles below to build the sentence...</span>
+                    </div>
+
+                    <!-- Available Tiles Area -->
+                    <div class="flex flex-wrap gap-2 justify-center p-2" id="rearrange-bank-zone">
+                        <!-- Tiles injected here -->
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex gap-2 justify-center mt-2">
+                        <button onclick="clearRearrangeTiles()" class="btn-pirate px-4 py-2 rounded-xl text-xs sm:text-sm">Clear Answer</button>
+                        <button id="btn-submit-rearrange" onclick="submitRearrangeAnswer()" class="btn-green px-6 py-2 rounded-xl text-sm font-bold">Check Answer</button>
+                    </div>
+                `;
+
+                area.appendChild(wrap);
+
+                // Populate Bank
+                const bankZone = document.getElementById('rearrange-bank-zone');
+                shuffledWords.forEach((word, idx) => {
+                    const tile = document.createElement('button');
+                    tile.className = "word-tile px-3 py-2 text-sm sm:text-base font-bold text-amber-950";
+                    tile.innerText = word;
+                    tile.dataset.word = word;
+                    tile.dataset.id = idx;
+                    tile.onclick = () => selectRearrangeTile(tile, word, idx);
+                    bankZone.appendChild(tile);
+                });
+            }
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 6. REARRANGE TILE MECHANICS                                               */
+        /* -------------------------------------------------------------------------- */
+        function selectRearrangeTile(tileElem, word, id) {
+            if (state.hasAnsweredCurrent) return;
+            playSound('click');
+
+            // Move tile from bank to answer zone
+            state.rearrangeSelected.push({ word, id });
+            tileElem.style.display = 'none';
+
+            updateRearrangeAnswerZone();
+        }
+
+        function removeRearrangeTile(id) {
+            if (state.hasAnsweredCurrent) return;
+            playSound('click');
+
+            state.rearrangeSelected = state.rearrangeSelected.filter(item => item.id !== id);
+            
+            // Show back in bank
+            const bankZone = document.getElementById('rearrange-bank-zone');
+            const tile = bankZone.querySelector(`[data-id="${id}"]`);
+            if (tile) tile.style.display = 'inline-block';
+
+            updateRearrangeAnswerZone();
+        }
+
+        function clearRearrangeTiles() {
+            if (state.hasAnsweredCurrent) return;
+            playSound('click');
+            state.rearrangeSelected = [];
+
+            const bankZone = document.getElementById('rearrange-bank-zone');
+            const tiles = bankZone.querySelectorAll('.word-tile');
+            tiles.forEach(t => t.style.display = 'inline-block');
+
+            updateRearrangeAnswerZone();
+        }
+
+        function updateRearrangeAnswerZone() {
+            const answerZone = document.getElementById('rearrange-answer-zone');
+            answerZone.innerHTML = '';
+
+            if (state.rearrangeSelected.length === 0) {
+                answerZone.innerHTML = `<span class="text-xs text-amber-800 italic font-medium" id="rearrange-placeholder">Click word tiles below to build the sentence...</span>`;
+                return;
+            }
+
+            state.rearrangeSelected.forEach(item => {
+                const tile = document.createElement('button');
+                tile.className = "word-tile bg-yellow-200 border-amber-600 px-3 py-2 text-sm sm:text-base font-bold text-amber-950 flex items-center gap-1";
+                tile.innerHTML = `<span>${item.word}</span> <span class="text-xs text-red-600 font-black">×</span>`;
+                tile.onclick = () => removeRearrangeTile(item.id);
+                answerZone.appendChild(tile);
+            });
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 7. ANSWER VALIDATION & INSTANT FEEDBACK                                    */
+        /* -------------------------------------------------------------------------- */
+        function submitMCQAnswer(selectedOpt, btnElem, q) {
+            if (state.hasAnsweredCurrent) return;
+            state.hasAnsweredCurrent = true;
+
+            const isCorrect = (selectedOpt.trim().toLowerCase() === q.correct.trim().toLowerCase());
+
+            // Lock all option buttons
+            const allBtns = document.querySelectorAll('#answer-interactive-area button');
+            allBtns.forEach(b => {
+                b.disabled = true;
+                const txt = b.querySelector('span').innerText;
+                if (txt.trim().toLowerCase() === q.correct.trim().toLowerCase()) {
+                    b.className = "p-3 rounded-xl text-sm sm:text-base text-left font-bold transition flex items-center justify-between bg-green-600 text-white border-4 border-green-800 pulse-correct";
+                    b.querySelector('.opt-mark').innerText = "✅";
+                } else if (b === btnElem && !isCorrect) {
+                    b.className = "p-3 rounded-xl text-sm sm:text-base text-left font-bold transition flex items-center justify-between bg-red-600 text-white border-4 border-red-800";
+                    b.querySelector('.opt-mark').innerText = "❌";
+                }
+            });
+
+            processResult(isCorrect, selectedOpt, q.correct, q.explain);
+        }
+
+        function submitTextAnswer() {
+            if (state.hasAnsweredCurrent) return;
+            const q = ISLANDS[state.currentIslandIdx].questions[state.currentQuestionIdx];
+            const inp = document.getElementById('input-text-answer');
+            if (!inp || !inp.value.trim()) return;
+
+            state.hasAnsweredCurrent = true;
+            inp.disabled = true;
+            document.getElementById('btn-submit-text').disabled = true;
+
+            const userVal = inp.value.trim().toLowerCase();
+            const correctVal = q.correct.trim().toLowerCase();
+            const isCorrect = (userVal === correctVal);
+
+            processResult(isCorrect, inp.value.trim(), q.correct, q.explain);
+        }
+
+        function submitRearrangeAnswer() {
+            if (state.hasAnsweredCurrent) return;
+            const q = ISLANDS[state.currentIslandIdx].questions[state.currentQuestionIdx];
+
+            if (state.rearrangeSelected.length === 0) return;
+
+            state.hasAnsweredCurrent = true;
+
+            // Lock rearrange controls
+            document.getElementById('btn-submit-rearrange').disabled = true;
+
+            const constructedSentence = state.rearrangeSelected.map(i => i.word).join(' ').trim();
+            const normalize = (str) => str.toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()]/g,"").replace(/\s+/g," ");
+
+            const isCorrect = (normalize(constructedSentence) === normalize(q.correct));
+
+            processResult(isCorrect, constructedSentence, q.correct, q.explain);
+        }
+
+        function processResult(isCorrect, userAns, correctAns, explanation) {
+            // Log answer for review screen
+            state.userAnswers.push({
+                island: ISLANDS[state.currentIslandIdx].name,
+                question: ISLANDS[state.currentIslandIdx].questions[state.currentQuestionIdx].text,
+                userAnswer: userAns,
+                correctAnswer: correctAns,
+                isCorrect: isCorrect
+            });
+
+            const fbBox = document.getElementById('feedback-box');
+            const fbIcon = document.getElementById('feedback-icon');
+            const fbTitle = document.getElementById('feedback-title');
+            const fbMsg = document.getElementById('feedback-msg');
+
+            fbBox.classList.remove('hidden');
+            fbBox.classList.add('flex');
+
+            if (isCorrect) {
+                playSound('correct');
+                state.totalCoins += 10;
+                state.islandScores[state.currentIslandIdx] += 10;
+
+                fbBox.classList.add('bg-green-100', 'border-green-600', 'text-green-950');
+                fbIcon.innerText = "✅";
+                fbTitle.innerText = "ARRR! Correct! Well done, matey!";
+                fbMsg.innerText = `+10 Gold Coins! ${explanation}`;
+
+                triggerCoinAnimation();
+            } else {
+                playSound('wrong');
+                fbBox.classList.add('bg-red-100', 'border-red-600', 'text-red-950');
+                fbIcon.innerText = "❌";
+                fbTitle.innerText = "Not quite, matey!";
+                fbMsg.innerText = `The correct answer is: "${correctAns}". ${explanation}`;
+            }
+
+            saveGameState();
+            updateHUD();
+        }
+
+        function triggerCoinAnimation() {
+            const container = document.getElementById('coin-popup-container');
+            const popup = document.createElement('div');
+            popup.className = "coin-popup text-3xl font-black text-yellow-400 drop-shadow-lg flex items-center gap-1";
+            popup.innerHTML = `🪙 +10`;
+            container.appendChild(popup);
+            setTimeout(() => popup.remove(), 900);
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            if (state.currentQuestionIdx < 11) {
+                state.currentQuestionIdx++;
+                showQuestionView();
+            } else {
+                // Island Completed
+                finishIsland();
+            }
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 8. ISLAND COMPLETION & FINAL REVIEW LOGIC                                 */
+        /* -------------------------------------------------------------------------- */
+        function finishIsland() {
+            playSound('fanfare');
+
+            // Unlock next island if available
+            if (state.currentIslandIdx + 1 < ISLANDS.length) {
+                state.islandUnlocked[state.currentIslandIdx + 1] = true;
+            }
+
+            saveGameState();
+
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-summary').classList.remove('hidden');
+            document.getElementById('view-summary').classList.add('flex');
+
+            const currentIsland = ISLANDS[state.currentIslandIdx];
+            document.getElementById('summary-island-name').innerText = currentIsland.name;
+            document.getElementById('summary-score-text').innerText = `${state.islandScores[state.currentIslandIdx]} / 120`;
+
+            const nextBtn = document.getElementById('btn-next-island');
+            if (state.currentIslandIdx + 1 < ISLANDS.length) {
+                nextBtn.innerText = "Next Island ➔";
+                nextBtn.onclick = () => {
+                    startIsland(state.currentIslandIdx + 1);
+                };
+            } else {
+                nextBtn.innerText = "Claim Grand Treasure! 👑";
+                nextBtn.onclick = () => showFinalResults();
+            }
+        }
+
+        function continueToNextIsland() {
+            if (state.currentIslandIdx + 1 < ISLANDS.length) {
+                startIsland(state.currentIslandIdx + 1);
+            } else {
+                showFinalResults();
+            }
+        }
+
+        function showFinalResults() {
+            playSound('fanfare');
+
+            document.getElementById('view-summary').classList.add('hidden');
+            document.getElementById('view-game').classList.add('hidden');
+            document.getElementById('view-map').classList.add('hidden');
+            document.getElementById('view-final').classList.remove('hidden');
+            document.getElementById('view-final').classList.add('flex');
+
+            const totalPossible = 720;
+            const score = state.totalCoins;
+            const percent = Math.round((score / totalPossible) * 100);
+            const totalCorrect = state.userAnswers.filter(a => a.isCorrect).length;
+
+            document.getElementById('final-coins').innerText = score;
+            document.getElementById('final-percent').innerText = `${percent}%`;
+            document.getElementById('final-correct').innerText = `${totalCorrect}/72`;
+
+            let rank = "Cabin Boy";
+            if (percent >= 90) rank = "Pirate King! 👑";
+            else if (percent >= 75) rank = "Captain! ⚔️";
+            else if (percent >= 50) rank = "First Mate! 🦜";
+            document.getElementById('final-rank').innerText = rank;
+
+            renderReviewLog();
+        }
+
+        function renderReviewLog() {
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            if (state.userAnswers.length === 0) {
+                list.innerHTML = `<p class="text-center text-amber-200">No questions answered yet.</p>`;
+                return;
+            }
+
+            state.userAnswers.forEach((ans, idx) => {
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-xl border-2 text-left ${ans.isCorrect ? 'bg-green-950/60 border-green-500' : 'bg-red-950/60 border-red-500'}`;
+                item.innerHTML = `
+                    <div class="flex justify-between text-xs font-bold mb-1 ${ans.isCorrect ? 'text-green-300' : 'text-red-300'}">
+                        <span>Q${idx + 1}. [${ans.island}]</span>
+                        <span>${ans.isCorrect ? 'Correct ✅' : 'Incorrect ❌'}</span>
+                    </div>
+                    <p class="text-sm font-semibold text-white mb-1">${ans.question}</p>
+                    <div class="text-xs space-y-0.5">
+                        <p class="text-slate-300">Your Answer: <span class="font-bold ${ans.isCorrect ? 'text-green-300' : 'text-red-300'}">${ans.userAnswer}</span></p>
+                        ${!ans.isCorrect ? `<p class="text-yellow-300 font-bold">Correct Answer: ${ans.correctAnswer}</p>` : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function toggleReviewSection() {
+            playSound('click');
+            const rev = document.getElementById('review-container');
+            rev.classList.toggle('hidden');
+        }
+
+        function restartGame() {
+            playSound('click');
+            state.totalCoins = 0;
+            state.currentIslandIdx = 0;
+            state.currentQuestionIdx = 0;
+            state.islandScores = [0, 0, 0, 0, 0, 0];
+            state.islandUnlocked = [true, false, false, false, false, false];
+            state.userAnswers = [];
+            saveGameState();
+            showMapView();
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* 9. INIT ON WINDOW LOAD                                                    */
+        /* -------------------------------------------------------------------------- */
+        window.onload = function() {
+            loadGameState();
+            showMapView();
+        };
+    </script>
+</body>
+</html>
